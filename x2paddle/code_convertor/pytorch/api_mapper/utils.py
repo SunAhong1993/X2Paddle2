@@ -47,6 +47,9 @@ def delete_key(kwargs, old_key):
         kwargs.pop(old_key)
 
 def generate_api_code(func_name, args, kwargs):
+    for i, arg in enumerate(args):
+        if not isinstance(args[i], str):
+            args[i] = str(args[i])
     args_str = ", ".join(args)
     kwargs_str_list = list()
     for k, v in kwargs.items():
@@ -57,3 +60,27 @@ def generate_api_code(func_name, args, kwargs):
     else:
         code = "{}({})".format(func_name, kwargs_str)
     return code
+
+
+class Mapper(object):
+    def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
+        self.func_name = func_name
+        self.pytorch_api_name = pytorch_api_name
+        self.args = args
+        self.kwargs = kwargs  
+        self.target_name = target_name
+        
+    def process_attrs(self):
+        pass
+     
+    def delete_attrs(self):
+        pass
+    
+    def check_attrs(self):
+        pass
+    
+    def run(self):
+        self.check_attrs()
+        self.process_attrs()
+        self.delete_attrs()
+        return [], generate_api_code(self.func_name, self.args, self.kwargs), []

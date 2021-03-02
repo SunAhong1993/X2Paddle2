@@ -21,6 +21,7 @@ class ClassDataLoader(object):
         if len(self.args) > same_attr_count:
             new_kwargs = api_args2kwargs(self.pytorch_api_name, self.args[same_attr_count:])
             self.kwargs.update(new_kwargs)
+            self.args = self.args[:same_attr_count]
         self.check_attrs()
         self.process_attrs()
         self.delete_attrs()

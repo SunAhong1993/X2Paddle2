@@ -6,3 +6,5 @@ from .paddle_optimizer import *
 from .paddle_nn_utils import *
 from .paddle_varbase import *
 from .paddle_container import *
+from .paddle_vision_transforms import *
+from .paddle_device import *

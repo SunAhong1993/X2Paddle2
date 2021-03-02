@@ -1,11 +1,8 @@
 from .utils import *
 
-class ClassAdam(object):
+class ClassAdam(Mapper):
     def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
-        self.func_name = func_name
-        self.pytorch_api_name = pytorch_api_name
-        self.args = args
-        self.kwargs = kwargs  
+        super().__init__(func_name, pytorch_api_name, args, kwargs, target_name)  
         
     def process_attrs(self):
         rename_key(self.kwargs, "params", "parameters")
@@ -15,10 +12,6 @@ class ClassAdam(object):
             betas = self.kwargs.pop("betas")
             self.kwargs["beta1"] = betas[0]
             self.kwargs["beta2"] = betas[1]
-        
-     
-    def delete_attrs(self):
-        pass
     
     def check_attrs(self):
         assert "amsgrad" not in self.kwargs or not self.kwargs["amsgrad"], "The amsgrad in torch.optim.Adam must be False!"
@@ -29,8 +22,10 @@ class ClassAdam(object):
             new_kwargs = api_args2kwargs(self.pytorch_api_name, self.args[same_attr_count:])
             self.kwargs.update(new_kwargs)
             self.args = self.args[:same_attr_count]
-        self.check_attrs()
-        self.process_attrs()
-        self.delete_attrs()
-        return [], generate_api_code(self.func_name, self.args, self.kwargs), []
+        return super().run()
+    
+class ClassSGD(Mapper):
+    def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
+        super().__init__(func_name, pytorch_api_name, args, kwargs, target_name)    
+
 

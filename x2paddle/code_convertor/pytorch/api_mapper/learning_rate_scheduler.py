@@ -1,12 +1,8 @@
 from .utils import *
 
-class ClassReduceOnPlateau(object):
+class ClassReduceOnPlateau(Mapper):
     def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
-        self.func_name = func_name
-        self.pytorch_api_name = pytorch_api_name
-        self.args = args
-        self.kwargs = kwargs  
-        self.target_name = target_name
+        super().__init__(func_name, pytorch_api_name, args, kwargs, target_name)
         self.useful_attrs = dict()
         
     def process_attrs(self):
@@ -29,4 +25,16 @@ class ClassReduceOnPlateau(object):
         self.delete_attrs()
         insert_code = "{}._learning_rate = {}".format(self.useful_attrs["optimizer"], self.target_name)
         return [], generate_api_code(self.func_name, self.args, self.kwargs), [insert_code]
+    
+class ClassCosineAnnealingDecay(ClassReduceOnPlateau):
+    def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
+        super().__init__(func_name, pytorch_api_name, args, kwargs, target_name)
+        
+    def check_attrs(self):
+        pass
+    
+class ClassMultiStepDecay(ClassCosineAnnealingDecay):
+    def __init__(self, func_name, pytorch_api_name, args, kwargs, target_name=None):
+        super().__init__(func_name, pytorch_api_name, args, kwargs, target_name)
+    
 
